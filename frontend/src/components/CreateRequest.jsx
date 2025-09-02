@@ -1,14 +1,14 @@
-import React, { useState, useContext } from 'react';
-import axios from 'axios';
-import { AuthContext } from '../context/AuthContext';
-import { toast } from 'react-hot-toast';
+import React, { useState, useContext } from "react";
+import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-hot-toast";
 
 function CreateRequest() {
   const { token } = useContext(AuthContext);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    budget: '',
+    title: "",
+    description: "",
+    budget: "",
   });
 
   const handleChange = (e) => {
@@ -18,17 +18,23 @@ function CreateRequest() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/requests/add', formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/requests/add`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
 
-      alert('Request posted successfully!');
-      setFormData({ title: '', description: '', budget: '' }); // Clear the form
+      toast.success("Request posted successfully!");
+      setFormData({ title: "", description: "", budget: "" }); // Clear the form
     } catch (error) {
-      console.error('Error posting request', error.response.data);
-      toast.error('Error: ' + error.response.data);
+      console.error("Error posting request", error.response?.data || error);
+      toast.error(
+        "Error: " + (error.response?.data?.message || "Something went wrong")
+      );
     }
   };
 
@@ -66,3 +72,4 @@ function CreateRequest() {
 }
 
 export default CreateRequest;
+

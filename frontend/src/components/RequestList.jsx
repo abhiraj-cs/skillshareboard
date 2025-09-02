@@ -15,7 +15,8 @@ function RequestList() {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/requests');
+        // ✅ Changed from localhost to the live API URL
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/requests`);
         setRequests(response.data);
       } catch (err) {
         setError('Failed to fetch requests.');
@@ -30,7 +31,8 @@ function RequestList() {
   const handleDelete = async (requestId) => {
     if (window.confirm('Are you sure you want to delete this request?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/requests/${requestId}`, {
+        // ✅ Changed from localhost to the live API URL
+        await axios.delete(`${import.meta.env.VITE_API_URL}/api/requests/${requestId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setRequests(requests.filter(req => req._id !== requestId));
@@ -52,38 +54,35 @@ function RequestList() {
   if (error) return <p>{error}</p>;
 
   return (
+    // ... your JSX remains the same
     <div className="request-list">
       <h3>Community Request Board</h3>
-      {requests.length === 0 ? (
-        <p>No help requests posted yet.</p>
-      ) : (
-        requests.map(request => (
-          <div key={request._id} className="service-card">
-            {editingRequestId === request._id ? (
-              <EditRequest request={request} onEditComplete={handleEditComplete} />
-            ) : (
-              <>
-                <h4>{request.title}</h4>
-                <p>{request.description}</p>
-                <p><strong>Budget:</strong> ₹{request.budget}</p>
-                <p>
-                  <em>
-                    Posted by: <Link to={`/profile/${request.user.username}`}>{request.user.username}</Link>
-                  </em>
-                </p>
-                {user && user.id === request.user._id && (
-                  <div>
-                    <button onClick={() => setEditingRequestId(request._id)}>Edit</button>
-                    <button onClick={() => handleDelete(request._id)} style={{ backgroundColor: '#dc3545', marginLeft: '10px' }}>
-                      Delete
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        ))
-      )}
+      {requests.map(request => (
+        <div key={request._id} className="service-card">
+          {editingRequestId === request._id ? (
+            <EditRequest request={request} onEditComplete={handleEditComplete} />
+          ) : (
+            <>
+              <h4>{request.title}</h4>
+              <p>{request.description}</p>
+              <p><strong>Budget:</strong> ₹{request.budget}</p>
+              <p>
+                <em>
+                  Posted by: <Link to={`/profile/${request.user.username}`}>{request.user.username}</Link>
+                </em>
+              </p>
+              {user && user.id === request.user._id && (
+                <div>
+                  <button onClick={() => setEditingRequestId(request._id)}>Edit</button>
+                  <button onClick={() => handleDelete(request._id)} style={{ backgroundColor: '#dc3545', marginLeft: '10px' }}>
+                    Delete
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      ))}
     </div>
   );
 }

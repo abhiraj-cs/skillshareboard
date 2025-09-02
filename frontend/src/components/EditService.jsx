@@ -18,11 +18,12 @@ function EditService({ service, onEditComplete }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://localhost:5000/api/services/${service._id}`, formData, {
+      // ✅ Changed from localhost to the live API URL
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/services/${service._id}`, formData, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       toast.success('Service updated successfully!');
-      onEditComplete(response.data); // Notify the parent component of the update
+      onEditComplete(response.data);
     } catch (error) {
       console.error('Error updating service', error);
       toast.error('Error: Could not update service.');

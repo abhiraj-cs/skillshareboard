@@ -11,23 +11,24 @@ function EditRequest({ request, onEditComplete }) {
     budget: request.budget,
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.put(`http://localhost:5000/api/requests/${request._id}`, formData, {
+  e.preventDefault();
+  try {
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_URL}/api/requests/${request._id}`,
+      formData,
+      {
         headers: { 'Authorization': `Bearer ${token}` }
-      });
-      toast.success('Request updated!');
-      onEditComplete(response.data);
-    } catch (error) {
-      toast.error('Could not update request.');
-      console.error('Error updating request', error);
-    }
-  };
+      }
+    );
+    toast.success('Request updated!');
+    onEditComplete(response.data);
+  } catch (error) {
+    toast.error('Could not update request.');
+    console.error('Error updating request', error);
+  }
+};
+
 
   return (
     <div className="edit-form">

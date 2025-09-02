@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import EditService from './EditService'; // Import the EditService component
+import EditService from './EditService';
 import { toast } from 'react-hot-toast';
 
 function ServiceList() {
@@ -10,13 +10,13 @@ function ServiceList() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editingServiceId, setEditingServiceId] = useState(null); // State to track which service is being edited
+  const [editingServiceId, setEditingServiceId] = useState(null);
 
   useEffect(() => {
-    // ... (fetchServices function remains the same)
     const fetchServices = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/services');
+        // ✅ Changed from localhost to the live API URL
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/services`);
         setServices(response.data);
       } catch (err) {
         setError('Failed to fetch services.');
@@ -28,10 +28,10 @@ function ServiceList() {
   }, []);
 
   const handleDelete = async (serviceId) => {
-    // ... (handleDelete function remains the same)
     if (window.confirm('Are you sure you want to delete this service?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/services/${serviceId}`, {
+        // ✅ Changed from localhost to the live API URL
+        await axios.delete(`${import.meta.env.VITE_API_URL}/api/services/${serviceId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setServices(services.filter(service => service._id !== serviceId));
@@ -44,16 +44,16 @@ function ServiceList() {
 
   const handleEditComplete = (updatedService) => {
     if (updatedService) {
-      // Find the service in the list and update it with the new data
       setServices(services.map(s => s._id === updatedService._id ? updatedService : s));
     }
-    setEditingServiceId(null); // Close the edit form
+    setEditingServiceId(null);
   };
 
   if (loading) return <p>Loading services...</p>;
   if (error) return <p>{error}</p>;
 
   return (
+    // ... your JSX remains the same
     <div className="service-list">
       <h3>Available Services</h3>
       {services.map(service => (

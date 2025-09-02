@@ -10,7 +10,6 @@ function Login() {
     password: '',
   });
 
-  // ✅ This function updates the state when you type in a form field.
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -21,7 +20,11 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/users/login', formData);
+      // ✅ Changed from localhost to the live API URL
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/users/login`, 
+        formData
+      );
       loginAction(response.data.user, response.data.token);
       toast.success('Logged in successfully!');
     } catch (err) {
@@ -39,7 +42,7 @@ function Login() {
             type="email"
             name="email"
             value={formData.email}
-            onChange={handleChange} // ✅ This connects the input to the handleChange function.
+            onChange={handleChange}
             required
           />
         </div>
@@ -49,7 +52,7 @@ function Login() {
             type="password"
             name="password"
             value={formData.password}
-            onChange={handleChange} // ✅ This also connects to the handleChange function.
+            onChange={handleChange}
             required
           />
         </div>

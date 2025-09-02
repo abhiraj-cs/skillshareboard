@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Import axios
+import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
 function Register() {
@@ -16,30 +16,29 @@ function Register() {
     });
   };
 
-  // UPDATED: This function now sends a request to the backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Send a POST request to your backend's register endpoint
+      // ✅ Changed from localhost to the live API URL
       const response = await axios.post(
-        'http://localhost:5000/api/users/register', 
+        `${import.meta.env.VITE_API_URL}/api/users/register`, 
         formData
       );
       
       console.log('User registered:', response.data);
-      toast.success('Registration successful!')
+      toast.success('Registration successful! Please log in.');
 
     } catch (error) {
-      // The backend will send an error message that we can display
-      console.error('There was an error registering!', error.response.data);
-      toast.error('Error: ' + error.response.data);
+      const errorMessage = error.response?.data || 'Registration failed.';
+      console.error('There was an error registering!', errorMessage);
+      toast.error('Error: ' + errorMessage);
     }
   };
 
   return (
     <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
+      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Register</h2>
+      <form onSubmit={handleSubmit} className="auth-form">
         <div>
           <label>Username</label>
           <input

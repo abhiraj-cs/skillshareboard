@@ -1,14 +1,14 @@
-import React, { useState, useContext } from 'react';
-import axios from 'axios';
-import { AuthContext } from '../context/AuthContext';
-import { toast } from 'react-hot-toast';
+import React, { useState, useContext } from "react";
+import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-hot-toast";
 
 function CreateService() {
   const { user, token } = useContext(AuthContext); // Get user and token
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    price: '',
+    title: "",
+    description: "",
+    price: "",
   });
 
   const handleChange = (e) => {
@@ -20,21 +20,27 @@ function CreateService() {
     try {
       const serviceData = {
         ...formData,
-        userId: user.id // Add the user's ID
+        userId: user.id, // Add the user's ID
       };
 
-      await axios.post('http://localhost:5000/api/services/add', serviceData, {
-        headers: {
-          'Authorization': `Bearer ${token}` // Send the token for authentication
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/services/add`,
+        serviceData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send the token for authentication
+          },
         }
-      });
+      );
 
-      toast.success('Service posted successfully!');
+      toast.success("Service posted successfully!");
       // Optionally, clear the form
-      setFormData({ title: '', description: '', price: '' });
+      setFormData({ title: "", description: "", price: "" });
     } catch (error) {
-      console.error('Error posting service', error.response.data);
-      toast.error('Error: ' + error.response.data);
+      console.error("Error posting service", error.response?.data || error);
+      toast.error(
+        "Error: " + (error.response?.data?.message || "Something went wrong")
+      );
     }
   };
 
@@ -72,3 +78,4 @@ function CreateService() {
 }
 
 export default CreateService;
+
