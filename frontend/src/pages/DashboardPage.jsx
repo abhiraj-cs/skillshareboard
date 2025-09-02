@@ -1,17 +1,15 @@
-// frontend/src/pages/DashboardPage.jsx
+// frontend/pages/dashboard.jsx
 import React, { useContext } from 'react';
-import { Navigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
 import Dashboard from '../components/Dashboard';
+import { AuthContext } from '../context/AuthContext';
 
-function DashboardPage() {
+export default function DashboardPage() {
   const { user } = useContext(AuthContext);
 
-  // If user is not logged in, redirect to the auth page
   if (!user) {
-    return <Navigate to="/auth" replace />;
+    return <p>Please log in to view the dashboard.</p>; // Or redirect using Next.js router
   }
 
   return <Dashboard />;
 }
-export default DashboardPage;
+
